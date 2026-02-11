@@ -6,126 +6,121 @@
     <title>Notcord Premium</title>
     <style>
         :root {
-            --bg-sidebar: #020617; --bg-chat: #0f172a; --accent: #3b82f6;
-            --text-main: #f8fafc; --text-muted: #94a3b8; --border: rgba(255,255,255,0.08);
-            --mention: rgba(245, 158, 11, 0.15); --mention-border: #f59e0b;
+            --bg-side: #0b0f1a; --bg-chat: #131926; --accent: #3b82f6;
+            --text: #f8fafc; --text-dim: #94a3b8; --border: rgba(255,255,255,0.06);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-chat); color: var(--text-main); height: 100vh; overflow: hidden; }
-        .app-container { display: grid; grid-template-columns: 260px 1fr 240px; height: 100vh; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-chat); color: var(--text); height: 100vh; overflow: hidden; }
+        .app { display: grid; grid-template-columns: 240px 1fr 220px; height: 100vh; }
 
         /* SIDEBAR */
-        .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 12px; gap: 15px; }
-        .brand { font-size: 16px; font-weight: 900; color: var(--accent); letter-spacing: 2px; padding: 10px; }
-        .profile-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 12px; }
-        .profile-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .avatar-box { width: 42px; height: 42px; border-radius: 50%; background: var(--accent); position: relative; cursor: pointer; border: 2px solid var(--border); flex-shrink: 0; overflow: hidden; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-box:hover::after { content: 'UP'; position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 10px; }
-        .profile-info input { background: transparent; border: none; color: white; font-weight: 700; width: 100%; outline: none; font-size: 14px; }
-        
-        .nav-list { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-        .nav-item { padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text-muted); font-size: 14px; transition: 0.1s; }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.04); color: white; }
-        .nav-item.active { color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+        .sidebar { background: var(--bg-side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 15px; gap: 20px; }
+        .profile { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
+        .avatar-main { width: 45px; height: 45px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--border); overflow: hidden; flex-shrink: 0; }
+        .avatar-main img { width: 100%; height: 100%; object-fit: cover; }
+        .profile input { background: transparent; border: none; color: white; font-weight: 700; width: 100%; outline: none; margin-top: 8px; font-size: 14px; border-bottom: 1px solid transparent; }
+        .profile input:focus { border-bottom-color: var(--accent); }
 
-        /* CHAT AREA */
-        .chat-main { display: flex; flex-direction: column; background: var(--bg-chat); position: relative; }
-        .chat-header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .nav { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; color: var(--text-dim); transition: 0.2s; font-size: 14px; font-weight: 600; }
+        .nav-item:hover, .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--accent); }
+
+        /* CHAT */
+        .chat { display: flex; flex-direction: column; position: relative; height: 100%; }
+        .header { padding: 15px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .msg-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 18px; scroll-behavior: auto; }
         
-        .msg { display: flex; gap: 12px; max-width: 80%; }
+        .msg { display: flex; gap: 14px; max-width: 85%; }
         .msg.me { align-self: flex-end; flex-direction: row-reverse; }
-        .msg-avatar { width: 36px; height: 36px; border-radius: 50%; background: #334155; flex-shrink: 0; overflow: hidden; border: 1px solid var(--border); }
-        .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .msg-bubble { background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border); }
-        .msg.me .msg-bubble { background: var(--accent); border: none; color: white; }
-        .msg-user { font-size: 11px; font-weight: 800; margin-bottom: 2px; color: var(--text-muted); }
-        .msg.me .msg-user { display: none; }
-        .msg-text { font-size: 14px; line-height: 1.4; word-break: break-word; }
+        .m-av { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: #334155; flex-shrink: 0; border: 1px solid var(--border); }
+        .m-av img { width: 100%; height: 100%; object-fit: cover; }
+        .m-content { display: flex; flex-direction: column; gap: 4px; }
+        .m-user { font-size: 12px; font-weight: 800; color: var(--accent); }
+        .msg.me .m-user { display: none; }
+        .m-bubble { background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; color: #e2e8f0; border: 1px solid var(--border); }
+        .msg.me .m-bubble { background: var(--accent); color: white; border: none; }
+
+        /* IMAGE & CODE CARDS */
+        .img-card { max-width: 400px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-top: 5px; }
+        .img-card img { width: 100%; display: block; cursor: zoom-in; transition: 0.2s; }
+        .img-card img:hover { filter: brightness(1.1); }
+        
+        .code-card { background: #011627; border-radius: 8px; border: 1px solid var(--border); margin-top: 8px; width: 100%; overflow: hidden; }
+        .code-header { background: rgba(255,255,255,0.05); padding: 6px 12px; font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; text-transform: uppercase; }
+        .code-snippet { padding: 12px; font-family: 'Fira Code', monospace; font-size: 13px; color: #d6deeb; overflow-x: auto; white-space: pre; }
 
         /* INPUTS */
-        .input-area { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-end; }
-        textarea, .link-input { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; color: white; padding: 10px; outline: none; resize: none; font-size: 14px; }
-        .upload-btn { background: #334155; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .btn-send { background: var(--accent); border: none; padding: 0 15px; height: 40px; border-radius: 10px; color: white; cursor: pointer; font-weight: 700; }
+        .input-bar { padding: 20px; border-top: 1px solid var(--border); display: flex; gap: 12px; }
+        textarea, .input-flat { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 10px; color: white; padding: 12px; outline: none; transition: 0.2s; font-size: 14px; }
+        textarea:focus { border-color: var(--accent); }
+        .send-btn { background: var(--accent); color: white; border: none; padding: 0 20px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; }
+        .send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
 
-        .online-sidebar { background: var(--bg-sidebar); border-left: 1px solid var(--border); padding: 15px; }
-        .user-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 13px; opacity: 0.7; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4b5563; }
-        .user-row.online { opacity: 1; }
-        .user-row.online .status-dot { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        /* ONLINE LIST */
+        .online-list { background: var(--bg-side); border-left: 1px solid var(--border); padding: 20px; }
+        .online-user { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; font-weight: 500; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #4b5563; transition: 0.3s; }
+        .online-user.on .dot { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
 
-        .image-preview { max-width: 100%; border-radius: 8px; margin-top: 5px; cursor: pointer; border: 1px solid var(--border); }
-        .code-block { background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; margin-top: 5px; position: relative; }
-        .copy-btn { position: absolute; top: 5px; right: 5px; font-size: 9px; padding: 3px; background: var(--accent); border: none; color: white; border-radius: 3px; opacity: 0.6; cursor: pointer; }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="app">
     <aside class="sidebar">
-        <div class="brand">NOTCORD</div>
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="avatar-box" id="avatarTrigger">
-                    <img id="myAvatarImg" src="">
-                    <input type="file" id="avatarFile" hidden accept="image/*">
-                </div>
-                <div class="profile-info">
-                    <input type="text" id="myName" placeholder="Set Username..." maxlength="12">
-                </div>
+        <div class="brand" style="font-weight:900; letter-spacing:2px; font-size:18px">NOTCORD</div>
+        <div class="profile">
+            <div style="display:flex; align-items:center; gap:12px">
+                <div class="avatar-main" id="avTrigger"><img id="myAv" src=""></div>
+                <input type="file" id="avFile" hidden accept="image/*">
+                <div style="flex:1"><input type="text" id="myName" placeholder="Username..."></div>
             </div>
-            <input type="text" id="myAvatarUrl" class="link-input" style="font-size:10px; padding:5px" placeholder="Paste Avatar Link...">
+            <input type="text" id="myAvUrl" style="font-size:10px; margin-top:10px" placeholder="Paste Avatar URL...">
         </div>
-        <nav class="nav-list" id="chanList">
+        <nav class="nav">
             <div class="nav-item active" data-id="general"># general</div>
             <div class="nav-item" data-id="photos"># photos</div>
             <div class="nav-item" data-id="code"># code</div>
         </nav>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:auto">
-            <p>Theme: <input type="color" id="baseColor" value="#0f172a"></p>
-            <p>Accent: <input type="color" id="accentColor" value="#3b82f6"></p>
+        <div style="font-size:11px; color:var(--text-dim)">
+            Theme <input type="color" id="themeColor" value="#131926" style="width:100%; height:20px; border:none; background:none">
         </div>
     </aside>
 
-    <main class="chat-main">
-        <div class="chat-header"><h2 id="chanTitle"># general</h2><small id="status" style="color:#22c55e">● Online</small></div>
-        <div class="messages-container" id="msgContainer"></div>
+    <main class="chat">
+        <div class="header"><h3 id="chanName"># general</h3><div id="status" style="font-size:11px; color:#22c55e">● System Online</div></div>
+        <div class="msg-box" id="msgBox"></div>
 
-        <!-- Inputs per channel -->
-        <div id="ui-general" class="input-area">
-            <textarea id="msgInput" placeholder="Message #general..." rows="1"></textarea>
-            <button class="btn-send" id="sendBtn">Send</button>
+        <!-- Dynamic Inputs -->
+        <div id="input-general" class="input-bar">
+            <textarea id="msgIn" placeholder="Message #general..." rows="1"></textarea>
+            <button class="send-btn" onclick="post('text')">Send</button>
         </div>
 
-        <div id="ui-photos" class="input-area" style="display:none">
-            <button class="upload-btn" id="photoFileBtn">📁</button>
-            <input type="file" id="photoFile" hidden accept="image/*">
-            <input type="text" id="photoUrl" class="link-input" placeholder="Paste image link here...">
-            <button class="btn-send" id="sendPhoto">Post</button>
+        <div id="input-photos" class="input-bar" style="display:none">
+            <input type="text" id="imgUrlIn" class="input-flat" placeholder="Paste Image URL / Link here...">
+            <button class="send-btn" onclick="post('img')">Post Photo</button>
         </div>
 
-        <div id="ui-code" class="input-area" style="display:none; flex-direction:column">
-            <textarea id="codeBody" placeholder="Paste code snippets here..." rows="3" style="width:100%"></textarea>
-            <div style="display:flex; width:100%; gap:10px; margin-top:5px">
-                <input type="text" id="codeLang" class="link-input" placeholder="Language (e.g. js, python)">
-                <button class="btn-send" id="sendCode">Upload Code</button>
+        <div id="input-code" class="input-bar" style="display:none; flex-direction:column">
+            <textarea id="codeBodyIn" placeholder="Paste code here..." rows="3" style="width:100%"></textarea>
+            <div style="display:flex; gap:10px; margin-top:8px">
+                <input type="text" id="codeLangIn" class="input-flat" placeholder="Language (js, html...)">
+                <button class="send-btn" onclick="post('code')">Upload Snippet</button>
             </div>
         </div>
     </main>
 
-    <aside class="online-sidebar">
-        <div style="font-size:11px; font-weight:900; color:var(--text-muted); margin-bottom:15px">ONLINE — <span id="count">0</span></div>
-        <div id="uList"></div>
+    <aside class="online-list">
+        <div style="font-size:11px; font-weight:900; color:var(--text-dim); margin-bottom:20px; text-transform:uppercase">Online — <span id="uCount">0</span></div>
+        <div id="uBox"></div>
     </aside>
 </div>
 
 <script>
-    const API = {
+    const ENDPOINTS = {
         general: 'https://68e839b2f2707e6128ca35e1.mockapi.io/chat',
         photos: 'https://68eeed86b06cc802829ba196.mockapi.io/photos',
         code: 'https://68eeed86b06cc802829ba196.mockapi.io/code',
@@ -133,176 +128,164 @@
     };
 
     let user = {
-        id: localStorage.getItem('nc_id') || null,
-        name: localStorage.getItem('nc_user') || 'User' + Math.floor(Math.random()*999),
-        avatar: localStorage.getItem('nc_av') || 'https://api.dicebear.com/7.x/bottts/svg?seed=NC'
+        id: localStorage.getItem('nc_id'),
+        name: localStorage.getItem('nc_name') || 'Guest' + Math.floor(Math.random()*999),
+        avatar: localStorage.getItem('nc_av') || 'https://api.dicebear.com/7.x/identicon/svg?seed=1'
     };
 
-    let chan = 'general';
-    let maxId = 0;
-    let isInitialLoad = true;
+    let activeChan = 'general';
+    let lastId = 0;
+    let isFirstLoad = true;
 
-    // --- SETUP ---
     function init() {
         document.getElementById('myName').value = user.name;
-        document.getElementById('myAvatarImg').src = user.avatar;
+        document.getElementById('myAv').src = user.avatar;
         Notification.requestPermission();
-        loadTheme();
         
-        setInterval(refresh, 2500);
-        setInterval(syncUser, 10000);
-        refresh();
-        syncUser();
+        setInterval(fetchMsgs, 2500);
+        setInterval(heartbeat, 8000);
+        fetchMsgs();
+        heartbeat();
     }
 
-    async function refresh() {
+    async function fetchMsgs() {
         try {
-            const res = await fetch(API[chan]);
+            const res = await fetch(ENDPOINTS[activeChan]);
             const data = await res.json();
             const sorted = data.sort((a,b) => a.id - b.id);
             
-            if (sorted.length > 0 && sorted[sorted.length-1].id !== maxId) {
-                const newMsgs = sorted.filter(m => parseInt(m.id) > maxId);
+            if (sorted.length > 0 && sorted[sorted.length-1].id !== lastId) {
+                const newItems = sorted.filter(m => parseInt(m.id) > lastId);
                 render(sorted);
                 
-                if (!isInitialLoad) {
-                    newMsgs.forEach(m => {
-                        if (m.username !== user.name) {
-                            if (m.message && m.message.includes('@' + user.name)) {
-                                new Notification(`Mentioned by ${m.username}`, { body: m.message });
-                            } else if (chan !== 'general') {
-                                new Notification(`New post in #${chan}`, { body: `${m.username} shared something.`});
-                            }
+                // Smart Notification
+                if(!isFirstLoad) {
+                    newItems.forEach(m => {
+                        if(m.username !== user.name && (m.message?.includes('@'+user.name) || activeChan !== 'general')) {
+                            new Notification(`New in #${activeChan}`, { body: `${m.username}: ${m.message || 'Shared an item'}` });
                         }
                     });
                 }
-                
-                maxId = parseInt(sorted[sorted.length-1].id);
-                scroll(isInitialLoad);
-                isInitialLoad = false;
+
+                lastId = parseInt(sorted[sorted.length-1].id);
+                scrollDown(isFirstLoad);
+                isFirstLoad = false;
             }
             fetchPlayers();
         } catch(e) {}
     }
 
     function render(data) {
-        const box = document.getElementById('msgContainer');
+        const box = document.getElementById('msgBox');
         box.innerHTML = data.map(m => {
             const me = m.username === user.name;
-            const mention = m.message && m.message.includes('@' + user.name);
-            let body = `<div class="msg-text">${esc(m.message)}</div>`;
-            
-            if (chan === 'photos' && m.url) body = `<img src="${m.url}" class="image-preview" onclick="window.open('${m.url}')">`;
-            if (chan === 'code' && m.code) body = `<div class="code-block"><button class="copy-btn" onclick="navigator.clipboard.writeText(\`${m.code}\`)">Copy</button><code>${esc(m.code)}</code></div>`;
+            let body = `<div class="m-bubble">${esc(m.message)}</div>`;
+
+            if(activeChan === 'photos' && m.url) {
+                body = `<div class="img-card"><img src="${m.url}" onclick="window.open('${m.url}')"></div>`;
+            } else if(activeChan === 'code' && m.code) {
+                body = `
+                    <div class="code-card">
+                        <div class="code-header"><span>${esc(m.lang || 'txt')}</span><span style="cursor:pointer" onclick="navigator.clipboard.writeText(\`${m.code}\`)">Copy</span></div>
+                        <div class="code-snippet">${esc(m.code)}</div>
+                    </div>`;
+            }
 
             return `
-                <div class="msg ${me ? 'me' : ''}" style="${mention ? 'background:rgba(255,165,0,0.1); border-left:3px solid orange; padding:5px' : ''}">
-                    <div class="msg-avatar"><img src="${m.avatar || 'https://api.dicebear.com/7.x/identicon/svg'}"></div>
-                    <div class="msg-bubble">
-                        <div class="msg-user">${esc(m.username)}</div>
+                <div class="msg ${me ? 'me' : ''}">
+                    <div class="m-av"><img src="${m.avatar || 'https://api.dicebear.com/7.x/identicon/svg'}"></div>
+                    <div class="m-content">
+                        <div class="m-user">${esc(m.username)}</div>
                         ${body}
                     </div>
                 </div>`;
         }).join('');
     }
 
-    async function send(type) {
-        let payload = { username: user.name, avatar: user.avatar, createdAt: Date.now() };
-        if (type === 'text') {
-            const val = document.getElementById('msgInput').value.trim();
-            if (!val) return;
+    async function post(type) {
+        let payload = { username: user.name, avatar: user.avatar, time: Date.now() };
+        if(type === 'text') {
+            const val = document.getElementById('msgIn').value.trim();
+            if(!val) return;
             payload.message = val;
-            document.getElementById('msgInput').value = '';
-        } else if (type === 'photo') {
-            const val = document.getElementById('photoUrl').value.trim();
-            if (!val) return;
+            document.getElementById('msgIn').value = '';
+        } else if(type === 'img') {
+            const val = document.getElementById('imgUrlIn').value.trim();
+            if(!val) return;
             payload.url = val;
-            document.getElementById('photoUrl').value = '';
-        } else if (type === 'code') {
-            const b = document.getElementById('codeBody').value.trim();
-            if (!b) return;
-            payload.code = b;
-            payload.lang = document.getElementById('codeLang').value || 'txt';
-            document.getElementById('codeBody').value = '';
+            document.getElementById('imgUrlIn').value = '';
+        } else if(type === 'code') {
+            const code = document.getElementById('codeBodyIn').value.trim();
+            if(!code) return;
+            payload.code = code;
+            payload.lang = document.getElementById('codeLangIn').value || 'code';
+            document.getElementById('codeBodyIn').value = '';
         }
 
-        await fetch(API[chan], {
+        await fetch(ENDPOINTS[activeChan], {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload)
         });
-        refresh();
+        fetchMsgs();
     }
 
-    // --- UTILS ---
-    async function syncUser() {
-        const payload = { name: user.name, avatar: user.avatar, lastSeen: Date.now(), online: true };
-        const res = await fetch(user.id ? `${API.players}/${user.id}` : API.players, {
+    async function heartbeat() {
+        const payload = { name: user.name, avatar: user.avatar, lastSeen: Date.now() };
+        const res = await fetch(user.id ? `${ENDPOINTS.players}/${user.id}` : ENDPOINTS.players, {
             method: user.id ? 'PUT' : 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (!user.id) { user.id = data.id; localStorage.setItem('nc_id', data.id); }
+        if(!user.id) { user.id = data.id; localStorage.setItem('nc_id', data.id); }
     }
 
     async function fetchPlayers() {
-        const res = await fetch(API.players);
-        const pts = await res.json();
+        const res = await fetch(ENDPOINTS.players);
+        const players = await res.json();
         const now = Date.now();
         let html = '', count = 0;
-        pts.forEach(p => {
-            const on = (now - p.lastSeen) < 30000;
-            if (on) count++;
-            html += `<div class="user-row ${on ? 'online' : ''}"><div class="status-dot"></div>${esc(p.name)}</div>`;
+        players.forEach(p => {
+            const active = (now - p.lastSeen) < 35000;
+            if(active) count++;
+            html += `<div class="online-user ${active ? 'on' : ''}"><div class="dot"></div>${esc(p.name)}</div>`;
         });
-        document.getElementById('uList').innerHTML = html;
-        document.getElementById('count').innerText = count;
+        document.getElementById('uBox').innerHTML = html;
+        document.getElementById('uCount').innerText = count;
     }
 
-    function scroll(force) {
-        const c = document.getElementById('msgContainer');
-        const nearBottom = (c.scrollHeight - c.scrollTop - c.clientHeight) < 150;
-        if (force || nearBottom) c.scrollTop = c.scrollHeight;
+    function scrollDown(force) {
+        const b = document.getElementById('msgBox');
+        const isNear = (b.scrollHeight - b.scrollTop - b.clientHeight) < 200;
+        if(force || isNear) b.scrollTop = b.scrollHeight;
     }
 
     function esc(s) { return s ? s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
 
-    // --- EVENTS ---
-    document.getElementById('sendBtn').onclick = () => send('text');
-    document.getElementById('sendPhoto').onclick = () => send('photo');
-    document.getElementById('sendCode').onclick = () => send('code');
-    document.getElementById('msgInput').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send('text'); }};
-
+    // Events
+    document.getElementById('myName').onchange = e => { user.name = e.target.value; localStorage.setItem('nc_name', user.name); heartbeat(); };
+    document.getElementById('myAvUrl').onchange = e => { user.avatar = e.target.value; document.getElementById('myAv').src = user.avatar; localStorage.setItem('nc_av', user.avatar); heartbeat(); };
+    document.getElementById('avTrigger').onclick = () => document.getElementById('avFile').click();
+    document.getElementById('avFile').onchange = e => {
+        const r = new FileReader();
+        r.onload = ev => { user.avatar = ev.target.result; document.getElementById('myAv').src = user.avatar; localStorage.setItem('nc_av', user.avatar); heartbeat(); };
+        r.readAsDataURL(e.target.files[0]);
+    };
+    
     document.querySelectorAll('.nav-item').forEach(el => {
         el.onclick = () => {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            chan = el.dataset.id;
-            document.getElementById('chanTitle').innerText = '# ' + chan;
-            ['general', 'photos', 'code'].forEach(id => document.getElementById('ui-'+id).style.display = chan === id ? 'flex' : 'none');
-            maxId = 0; isInitialLoad = true; refresh();
+            activeChan = el.dataset.id;
+            document.getElementById('chanName').innerText = '# ' + activeChan;
+            ['general', 'photos', 'code'].forEach(id => document.getElementById('input-'+id).style.display = activeChan === id ? 'flex' : 'none');
+            lastId = 0; isFirstLoad = true; document.getElementById('msgBox').innerHTML = ''; fetchMsgs();
         };
     });
 
-    // Upload & Avatar Logic
-    const reader = (file, cb) => { const r = new FileReader(); r.onload = e => cb(e.target.result); r.readAsDataURL(file); };
-    document.getElementById('avatarTrigger').onclick = () => document.getElementById('avatarFile').click();
-    document.getElementById('avatarFile').onchange = e => reader(e.target.files[0], base => { user.avatar = base; document.getElementById('myAvatarImg').src = base; localStorage.setItem('nc_av', base); syncUser(); });
-    document.getElementById('myAvatarUrl').onchange = e => { user.avatar = e.target.value; document.getElementById('myAvatarImg').src = user.avatar; localStorage.setItem('nc_av', user.avatar); syncUser(); };
-    document.getElementById('myName').onchange = e => { user.name = e.target.value; localStorage.setItem('nc_user', user.name); syncUser(); };
-    
-    document.getElementById('photoFileBtn').onclick = () => document.getElementById('photoFile').click();
-    document.getElementById('photoFile').onchange = e => reader(e.target.files[0], base => { document.getElementById('photoUrl').value = base; });
-
-    // Themes
-    document.getElementById('baseColor').oninput = e => { document.documentElement.style.setProperty('--bg-chat', e.target.value); localStorage.setItem('th_base', e.target.value); };
-    document.getElementById('accentColor').oninput = e => { document.documentElement.style.setProperty('--accent', e.target.value); localStorage.setItem('th_acc', e.target.value); };
-    function loadTheme() {
-        const b = localStorage.getItem('th_base'), a = localStorage.getItem('th_acc');
-        if(b) { document.documentElement.style.setProperty('--bg-chat', b); document.getElementById('baseColor').value = b; }
-        if(a) { document.documentElement.style.setProperty('--accent', a); document.getElementById('accentColor').value = a; }
-    }
+    document.getElementById('msgIn').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); post('text'); }};
+    document.getElementById('themeColor').oninput = e => document.documentElement.style.setProperty('--bg-chat', e.target.value);
 
     init();
 </script>
